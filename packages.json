@@ -1,0 +1,5 @@
+{
+  "noble": "1.2.1",
+  "xpc-connection": "0.1.4",
+  "serialport" : "2.0.5"
+}
