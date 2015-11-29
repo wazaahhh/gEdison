@@ -5,7 +5,7 @@ var noble = require('noble');
 var fs = require('fs');
 
 filename = "export_ypr_" + Date.now() + ".csv";
-fs.appendFile(filename, "timestamp,yaw, pitch, roll\n");
+fs.appendFile(filename, "timestamp,yaw, pitch, roll\n", function (err){if (err) throw err;});
 
 // var SerialPort = require('serialport').SerialPort;
 // var serial = new SerialPort("/dev/tty.usbserial", {
@@ -93,7 +93,9 @@ noble.on('discover', function(peripheral) {
                             + ", pitch: " + yprRecord['pitch']
                             + ", roll: " + yprRecord['roll'];
                           console.log(str);
-                          fs.appendFile(filename, yprRecord['timestamp'] + "," + yprRecord['yaw'] + "," + yprRecord['pitch'] + "," + yprRecord['roll'] + "\n"); // Write the string to a file
+                          fs.appendFile(filename, yprRecord['timestamp'] + "," + yprRecord['yaw'] + "," + yprRecord['pitch'] + "," + yprRecord['roll'] + "\n", function (err){
+                            if (err) throw err;
+                          });// Write the string to a file
 
 
                     })
