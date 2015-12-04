@@ -1,6 +1,11 @@
 var serialport = require('serialport')
 var SerialPort = serialport.SerialPort;
 
+// Manually select serial port
+var port = '/dev/cu.usbserial'; // Mac OS for testing
+//var port = '/dev/ttyUSB0';   // Intel Edison
+
+
 var fs = require('fs');
 filename = "export_gps_" + Date.now() + ".csv";
 fs.appendFile(filename, "timestamp,gpsdata\n", function (err){if (err) throw err;});
