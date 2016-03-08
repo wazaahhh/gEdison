@@ -7,14 +7,17 @@ var fs = require('fs');
 var imuDic =  {'9f3f64afce1545b5b1ce67a082075aeb' : 'Bohr',
                'e0bee4423f2c' : 'Bohr',
                '40028eb548474d8d9b0b5c0d9c3a8350' : 'Einstein',
-                'de6d99f99c47' : 'Einstein'
+                'de6d99f99c47' : 'Einstein',
+                'fc56643e9ccb4cd3812bcfe242176b92' : 'Feynman',
+                '25e56abeb25444ae9851c1f90efc4214' : 'Avogadro',
+                '5a0bb4a4562d4f60ac169f7c2b614047' : 'Kirchhoff',
                 }
 
 
 
 
-filename = "ypr_" + Date.now() + ".csv";
-filename = "ypr.csv";
+filename = "nodeData/ypr_" + Date.now() + ".csv";
+filename = "nodeData/ypr.csv";
 fs.appendFile(filename, "timestamp, IMU, yaw, pitch, roll,rssi\n", function (err){if (err) throw err;});
 
 logfile = 'logfile';
@@ -37,11 +40,34 @@ var streamData = function(peripheral) {
 
         if (characteristic.uuid == NORDIC_NRF8001_CHAR_RX) {
             //console.log(characteristic);
+            //console.log("blah1");
             characteristic.notify(true,function(err){
-              fs.appendFile(logfile, Date.now() + "," +  "characteristics RX notify : reading" +
-imuDic[peripheral.uuid] + "\n");
+
+              if (err){
+                peripheral.disconnect();
+                console.log("blah2");
+              }
+
+              console.log(peripheral.uuid);
+              p_name = imuDic[peripheral.uuid];
+
+              //if (imuDic[peripheral.uuid] == 'undefined'){
+                //p_name = imuDic[peripheral.uuid];
+              //  console.log(peripheral.uuid);
+              //  p_name = peripheral.uuid;
+              //  }
+
+              //else {
+              //  p_name = imuDic[peripheral.uuid];
+              //  console.log(imuDic[peripheral.uuid])
+              //  console.log("blah3");
+              //  }
+
+              fs.appendFile(logfile, Date.now() + "," +  "characteristics RX notify : reading " +
+p_name + "\n");
               console.log('characteristics RX notify : reading ' +
-imuDic[peripheral.uuid]);
+p_name);
+
 
 
                 characteristic.on('read', function(data){
@@ -77,6 +103,7 @@ imuDic[peripheral.uuid]);
                 });
             });
         }
+
     });
   });
 }
@@ -125,6 +152,7 @@ noble.on('discover', function(peripheral) {
      peripheral.connect(function(err) {
        fs.appendFile(logfile, Date.now() + "," + imuDic[peripheral.uuid] + "," + peripheral.state + "\n")
        console.log(imuDic[peripheral.uuid] + ": " + peripheral.state);
+
        streamData(peripheral);
     });
   });

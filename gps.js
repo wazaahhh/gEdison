@@ -16,8 +16,6 @@ var serial = new SerialPort("/dev/cu.usbserial", {
 });
 
 
-
-
 serial.open(function (error) {
   if ( error ) {
     console.log('failed to open: '+error);
